@@ -1,19 +1,63 @@
-# update the appointments
 from tkinter import *
-import tkinter.messagebox 
 import sqlite3
-
+import pyttsx3
+import tkinter.messagebox
+# connection to database
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
 
+# empty lists to append later
+number = []
+patients = []
+
+sql = "SELECT * FROM appointments"
+res = c.execute(sql)
+for r in res:
+    ids = r[0]
+    name = r[1]
+    number.append(ids)
+    patients.append(name)
+
+# window
 class Application:
+    def __init__(self, master):
+        self.master = master
+
+        self.x = 0
+        
+        # heading
+        self.heading = Label(master, text="Bookings", font=('arial 60 bold'), fg='green')
+        self.heading.place(x=700, y=0)
+
+        # button to change bookings
+        self.change = Button(master, text="Next Booking", width=25, height=2, bg='steelblue', command=self.func)
+        self.change.place(x=800, y=600)
+
+        # empty text labels to later config
+        self.n = Label(master, text="", font=('arial 200 bold'))
+        self.n.place(x=800, y=100)
+
+        self.pname = Label(master, text="", font=('arial 80 bold'))
+        self.pname.place(x=650, y=400)
+    # function to speak the text and update the text
+    def func(self):
+        self.n.config(text=str(number[self.x]))
+        self.pname.config(text=str(patients[self.x]))
+        engine = pyttsx3.init()
+        voices = engine.getProperty('voices')
+        rate = engine.getProperty('rate')
+        engine.setProperty('rate', rate-50)
+        engine.say('Booking number ' + str(number[self.x]) + str(patients[self.x]))
+        engine.runAndWait()
+        self.x += 1
+class Application1:
     def __init__(self, master):
         self.master = master
         # heading label
         self.heading = Label(master, text="Bookings ",  fg='grey', font=('arial 40 bold'))
         self.heading.place(x=150, y=20)
 
-        # search criteria -->name 
+        # search criteria -->name
         self.name = Label(master, text="Enter Owner's Name", font=('arial 18 bold'))
         self.name.place(x=0, y=100)
 
@@ -27,7 +71,7 @@ class Application:
     # function to search
     def search_db(self):
         self.input = self.namenet.get()
-        # execute sql 
+        # execute sql
 
         sql = "SELECT * FROM appointments WHERE name LIKE ?"
         self.res = c.execute(sql, (self.input,))
@@ -118,6 +162,7 @@ class Application:
 # creating the object
 root = Tk()
 b = Application(root)
+d = Application1(root)
 root.geometry("1366x768+0+0")
 root.resizable(False, False)
 root.mainloop()
