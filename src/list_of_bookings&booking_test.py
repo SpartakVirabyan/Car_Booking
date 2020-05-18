@@ -2,6 +2,7 @@ from tkinter import *
 import sqlite3
 import pyttsx3
 import tkinter.messagebox
+import tkinter as tk
 # connection to database
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
@@ -160,34 +161,34 @@ class Application1:
         self.ent5.destroy()
         self.ent6.destroy()
 class List():
-    def __init__(self):
-        self.tk = tkinter
-        self.listbox = self.tk.Listbox(root)
+    def __init__(self, root):
+        self.root = tk.Tk()
+        self.listbox = tk.Listbox(root)
         self.listbox.pack()
 
     def clicked(self):
-        self.listbox.insert(self.tk.END, self.content.get())
+        self.listbox.insert(tk.END, self.content.get())
 
     def delete(self):
-        self.listbox.delete(0, self.tk.END)
+        self.listbox.delete(0, tk.END)
 
     def delete_selected(self):
-        self.listbox.delete(self.tk.ANCHOR)
+        self.listbox.delete(tk.ANCHOR)
 
     def function(self):
-        self.content = patients
-        self.entry = self.tk.Entry(root, textvariable=self.content)
+        self.content = patients + number
+        self.entry = tk.Entry(root, textvariable=self.content)
         self.entry.pack()
-        self.button = self.tk.Button(root, text="Add Item", command=self.clicked)
+        self.button = tk.Button(root, text="Add Item", command=self.clicked)
         self.button.pack()
-        self.button_delete = self.tk.Button(text="Delete", command=self.delete)
+        self.button_delete = tk.Button(text="Delete", command=self.delete)
         self.button_delete.pack()
-        self.button_delete_selected = self.tk.Button(text="Delete Selected", command=self.delete_selected)
+        self.button_delete_selected = tk.Button(text="Delete Selected", command=self.delete_selected)
         self.button_delete_selected.pack()
-
+        self.root.mainloop()
 # creating the object
 root = Tk()
-a = List()
+a = List(root)
 b = Application(root)
 d = Application1(root)
 root.geometry("1366x768+0+0")
