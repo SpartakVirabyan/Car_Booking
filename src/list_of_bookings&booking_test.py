@@ -1,8 +1,9 @@
 from tkinter import *
 import sqlite3
-import pyttsx3
 import tkinter.messagebox
 import tkinter as tk
+
+global list_data
 # connection to database
 conn = sqlite3.connect('database.db')
 c = conn.cursor()
@@ -10,6 +11,7 @@ c = conn.cursor()
 # empty lists to append later
 number = []
 patients = []
+list_data = []
 
 sql = "SELECT * FROM appointments"
 res = c.execute(sql)
@@ -29,8 +31,8 @@ class Application:
         self.heading.place(x=700, y=0)
 
         # button to change bookings
-        self.change = Button(master, text="Next Booking", width=25, height=2, bg='steelblue', command=self.func)
-        self.change.place(x=800, y=600)
+        #self.change = Button(master, text="Next Booking", width=25, height=2, bg='steelblue', command=self.func)
+        #self.change.place(x=800, y=600)
 
         # empty text labels to later config
         self.n = Label(master, text="", font=('arial 200 bold'))
@@ -40,18 +42,17 @@ class Application:
         self.pname.place(x=650, y=400)
     # function to speak the text and update the text
 
-    def func(self):
-        self.n.config(text=str(number[self.x]))
-        self.pname.config(text=str(patients[self.x]))
-        engine = pyttsx3.init()
-        voices = engine.getProperty('voices')
-        rate = engine.getProperty('rate')
-        engine.setProperty('rate', rate - 50)
-        engine.say('Booking number ' + str(number[self.x]) + str(patients[self.x]))
-        engine.runAndWait()
+    #def func(self):
+    #    self.n.config(text=str(number[self.x]))
+    #    self.pname.config(text=str(patients[self.x]))
+    #    engine = pyttsx3.init()
+    #    voices = engine.getProperty('voices')
+    #    rate = engine.getProperty('rate')
+    #    engine.setProperty('rate', rate - 50)
+    #    engine.say('Booking number ' + str(number[self.x]) + str(patients[self.x]))
+    #    engine.runAndWait()
         self.x += 1
-
-class Application1:
+class Application_for_check:
     def __init__(self, master):
         self.master = master
         # heading label
@@ -162,35 +163,45 @@ class Application1:
         self.ent6.destroy()
 class List():
     def __init__(self, root):
-        self.root = tk.Tk()
-        self.listbox = tk.Listbox(root)
+        self.listbox = Listbox(root)
         self.listbox.pack()
-
+        self.listbox.place(x=825, y=200)
+        self.function()
     def clicked(self):
-        self.listbox.insert(tk.END, self.content.get())
+        self.listbox.insert(END, patients)
+        self.listbox.insert(0,0, patients)
 
     def delete(self):
-        self.listbox.delete(0, tk.END)
+        self.listbox.delete(0, END)
 
     def delete_selected(self):
-        self.listbox.delete(tk.ANCHOR)
+        self.listbox.delete(ANCHOR)
 
+    #def quit(self):
+    #    "action performed when you click the button quit and save"
+    #    global root
+    #    with open("save.txt", "w", encoding="utf-8") as file:
+    #        for d in list_data:
+    #            file.write(d + "\n")
+    #    root.destroy()
     def function(self):
-        self.content = patients + number
-        self.entry = tk.Entry(root, textvariable=self.content)
-        self.entry.pack()
-        self.button = tk.Button(root, text="Add Item", command=self.clicked)
+        self.button = Button(text="Add", width=20, height=2, bg='steelblue', command=self.clicked())
         self.button.pack()
-        self.button_delete = tk.Button(text="Delete", command=self.delete)
+        self.button.place(x=815, y=100)
+        self.button_delete = Button(text="Delete", width=20, height=2, bg='steelblue', command=self.delete())
         self.button_delete.pack()
-        self.button_delete_selected = tk.Button(text="Delete Selected", command=self.delete_selected)
+        self.button_delete.place(x=815, y=400)
+        self.button_delete_selected = Button(text="Delete Selected", width=20, height=2, bg='steelblue', command=self.delete_selected())
         self.button_delete_selected.pack()
-        self.root.mainloop()
+        self.button_delete_selected.place(x=815, y=500)
+        self.bquit = Button(text="Save & quit", width=20, height=2, bg='steelblue' )#command=self.quit())
+        self.bquit.pack()
+        self.bquit.place(x=815, y=600)
 # creating the object
 root = Tk()
 a = List(root)
 b = Application(root)
-d = Application1(root)
+d = Application_for_check(root)
 root.geometry("1366x768+0+0")
 root.resizable(False, False)
 root.mainloop()
