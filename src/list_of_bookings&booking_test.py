@@ -22,9 +22,7 @@ for r in res:
 class Application:
     def __init__(self, master):
         self.master = master
-
         self.x = 0
-        
         # heading
         self.heading = Label(master, text="Bookings", font=('arial 60 bold'), fg='green')
         self.heading.place(x=700, y=0)
@@ -40,16 +38,18 @@ class Application:
         self.pname = Label(master, text="", font=('arial 80 bold'))
         self.pname.place(x=650, y=400)
     # function to speak the text and update the text
+
     def func(self):
         self.n.config(text=str(number[self.x]))
         self.pname.config(text=str(patients[self.x]))
         engine = pyttsx3.init()
         voices = engine.getProperty('voices')
         rate = engine.getProperty('rate')
-        engine.setProperty('rate', rate-50)
+        engine.setProperty('rate', rate - 50)
         engine.say('Booking number ' + str(number[self.x]) + str(patients[self.x]))
         engine.runAndWait()
         self.x += 1
+
 class Application1:
     def __init__(self, master):
         self.master = master
@@ -159,8 +159,35 @@ class Application1:
         self.ent4.destroy()
         self.ent5.destroy()
         self.ent6.destroy()
+class List():
+    def __init__(self):
+        self.tk = tkinter
+        self.listbox = self.tk.Listbox(root)
+        self.listbox.pack()
+
+    def clicked(self):
+        self.listbox.insert(self.tk.END, self.content.get())
+
+    def delete(self):
+        self.listbox.delete(0, self.tk.END)
+
+    def delete_selected(self):
+        self.listbox.delete(self.tk.ANCHOR)
+
+    def function(self):
+        self.content = patients
+        self.entry = self.tk.Entry(root, textvariable=self.content)
+        self.entry.pack()
+        self.button = self.tk.Button(root, text="Add Item", command=self.clicked)
+        self.button.pack()
+        self.button_delete = self.tk.Button(text="Delete", command=self.delete)
+        self.button_delete.pack()
+        self.button_delete_selected = self.tk.Button(text="Delete Selected", command=self.delete_selected)
+        self.button_delete_selected.pack()
+
 # creating the object
 root = Tk()
+a = List()
 b = Application(root)
 d = Application1(root)
 root.geometry("1366x768+0+0")
